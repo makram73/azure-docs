@@ -224,8 +224,8 @@ In the Cloud Shell, run the following commands on the frontend app to add the `s
 
 ```azurecli-interactive
 az extension add --name authV2
-authSettings=$(az webapp auth show -g myAuthResourceGroup -n <front-end-app-name>)
-authSettings=$(echo "$authSettings" | jq '.properties' | jq '.identityProviders.azureActiveDirectory.login += {"loginParameters":["scope=openid offline_access api://<back-end-client-id>/user_impersonation"]}')
+$authSettings=(az webapp auth show -g myAuthResourceGroup -n <front-end-app-name>)
+$authSettings=(echo "$authSettings" | jq '.properties' | jq '.identityProviders.azureActiveDirectory.login += {"loginParameters":["scope=openid offline_access api://<back-end-client-id>/user_impersonation"]}')
 az webapp auth set --resource-group myAuthResourceGroup --name <front-end-app-name> --body "$authSettings"
 ```
 
@@ -259,12 +259,12 @@ You can set this via the same Azure CLI process you used in the previous step.
 1. Run the following Azure CLI, substituting the `<back-end-app-name>` and `<front-end-app-id>`.
 
 ```azurecli-interactive
-authSettings=$(az webapp auth show -g myAuthResourceGroup -n <back-end-app-name>)
-authSettings=$(echo "$authSettings" | jq '.properties' | jq '.identityProviders.azureActiveDirectory.validation.defaultAuthorizationPolicy.allowedApplications += ["<front-end-app-id>"]')
+$authSettings=(az webapp auth show -g myAuthResourceGroup -n <back-end-app-name>)
+$authSettings=(echo "$authSettings" | jq '.properties' | jq '.identityProviders.azureActiveDirectory.validation.defaultAuthorizationPolicy.allowedApplications += ["<front-end-app-id>"]')
 az webapp auth set --resource-group myAuthResourceGroup --name <back-end-app-name> --body "$authSettings"
 
-authSettings=$(az webapp auth show -g myAuthResourceGroup  -n <back-end-app-name>)
-authSettings=$(echo "$authSettings" | jq '.properties' | jq '.identityProviders.azureActiveDirectory.validation.jwtClaimChecks += { "allowedClientApplications": ["<front-end-app-id>"]}')
+$authSettings=(az webapp auth show -g myAuthResourceGroup  -n <back-end-app-name>)
+$authSettings=(echo "$authSettings" | jq '.properties' | jq '.identityProviders.azureActiveDirectory.validation.jwtClaimChecks += { "allowedClientApplications": ["<front-end-app-id>"]}')
 az webapp auth set --resource-group myAuthResourceGroup --name <back-end-app-name> --body "$authSettings"
 ```
 
